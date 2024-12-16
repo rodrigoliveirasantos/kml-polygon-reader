@@ -1,6 +1,16 @@
 const fs = require('node:fs');
 const { XMLParser } = require('fast-xml-parser');
 
+function removeAttributes(xmlObj) {
+    const filteredKeys = Object.keys(xmlObj).filter((key) => !key.startsWith('@_'));
+    return filteredKeys.reduce((acc, key) => {
+        return {
+            ...acc,
+            [key]: xmlObj[key]
+        }
+    }, {})
+}
+
 /**
  * Transforma o conteúdo lido das tags coordinate do xml em um
  * array de LatLng.
@@ -24,8 +34,18 @@ function parseCoordinatesTagContent(str) {
 function getPolygonStyles(xml) {
     return xml.StyleMap.reduce((acc, styleMap) => {
         const polygonId = styleMap['@_id'];
-        const styles = styleMap.Pair;
-        
+
+        const styles = styleMap.Pair.reduce((acc, styleMap) => {
+            const style = xml.Style.find((style) => {
+                return style['@_id'] === styleMap.styleUrl.substring(1)
+            });
+
+            return {
+                ...acc,
+                [styleMap.key]: removeAttributes(style),
+            }
+        }, {});
+
         return {
             ...acc,
             [polygonId]: styles
@@ -56,7 +76,7 @@ function getPolygons(xml) {
 
 function main(path) {
     const content = fs.readFileSync(path);
-    const xml = new XMLParser({ ignoreAttributes: false }).parse(content);
+    const xml = new XMLParser({ ignoreAttributes: (attr) => attr !== 'id' }).parse(content);
 
     const root = xml.kml.Document;
 
