@@ -19,7 +19,7 @@ function parseCoordinatesTagContent(str) {
     return str
         .split('\n')
         .map((s) => {
-            const [ lat, lng ] = s.trim()
+            const [ lng, lat ] = s.trim()
                 .split(',')
                 .map((latLng) => Number(latLng))
                 .slice(0, -1)
