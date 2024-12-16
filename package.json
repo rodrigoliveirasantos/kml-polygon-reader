@@ -1,0 +1,17 @@
+{
+  "name": "kml-polygon-reader",
+  "version": "1.0.0",
+  "main": "index.cjs",
+  "module": "index.cjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node ./index.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fast-xml-parser": "^4.5.1"
+  }
+}

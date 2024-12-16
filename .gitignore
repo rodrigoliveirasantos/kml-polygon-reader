@@ -1,0 +1,11 @@
+# Input
+*.kml
+
+# Output
+out.json
+
+# NPM
+node_modules
+
+# IDE 
+.vscode
