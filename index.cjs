@@ -58,9 +58,16 @@ function getPolygonStyles(xml) {
  */
 function getPolygons(xml) {
     const placemarks = xml.Folder.flatMap((folder) => folder.Placemark);
-    
-    return placemarks.map((placemark) => {
-        return {
+    const polygons = [];
+
+    for (let i = 0; i < placemarks.length; i++) {
+        const placemark = placemarks[i];
+
+        if (!placemark.Polygon) {
+            continue;
+        }
+
+        polygons.push({
             name: placemark.name,
             style: placemark.styleUrl.substring(1),
             coordinates: parseCoordinatesTagContent(
@@ -70,8 +77,10 @@ function getPolygons(xml) {
                     .LinearRing
                     .coordinates
             )
-        }
-    });
+        })
+    }
+    
+   return polygons
 }
 
 function main(path) {
@@ -81,7 +90,7 @@ function main(path) {
     const root = xml.kml.Document;
 
     const polygons = getPolygons(root);
-    const styles = getPolygonStyles(root);
+    const styles = {}; // getPolygonStyles(root);
 
     fs.writeFileSync('./out.json', JSON.stringify({
         polygons,
