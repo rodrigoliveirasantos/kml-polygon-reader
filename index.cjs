@@ -57,7 +57,13 @@ function getPolygonStyles(xml) {
  * @param {object} xml
  */
 function getPolygons(xml) {
-    const placemarks = xml.Folder.flatMap((folder) => folder.Placemark);
+    let placemarks = []
+    if (xml.Folder) {
+        placemarks = xml.Folder.flatMap((folder) => folder.Placemark);
+    } else {
+        placemarks = xml.Placemark;
+    }
+    
     const polygons = [];
 
     for (let i = 0; i < placemarks.length; i++) {
